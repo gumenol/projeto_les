@@ -101,8 +101,9 @@ public class Fachada implements IFachada {
 		objResultado = new Resultado();
 		String nmClasse = entidade.getClass().getName();
 		System.out.println(nmClasse);
-		String msg = executarRegras(entidade, "SALVAR");
+		String msg = executarRegras(entidade, "SALVAR-PRODUTO");
 		System.out.println(msg);
+		System.out.println("antes da dao");
 		if(msg == null) {
 			IDAO objDao = daos.get(nmClasse);
 			try {
@@ -126,7 +127,7 @@ public class Fachada implements IFachada {
 		objResultado = new Resultado();
 		String nmClasse = entidade.getClass().getName();
 		
-		String msg = executarRegras(entidade, "EXCLUIR");
+		String msg = executarRegras(entidade, "EXCLUIR-PRODUTO");
 		
 		if(msg == null) {
 			IDAO objDao = daos.get(nmClasse);
@@ -149,7 +150,7 @@ public class Fachada implements IFachada {
 	public Resultado alterar(EntidadeDominio entidade) {
 		objResultado = new Resultado();
 		String nmClasse = entidade.getClass().getName();
-		String msg = executarRegras(entidade, "ALTERAR");
+		String msg = executarRegras(entidade, "ALTERAR-PRODUTO");
 		if(msg == null) {
 			IDAO objDao = daos.get(nmClasse);
 			try {

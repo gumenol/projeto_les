@@ -22,24 +22,30 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 		openConnection();
 		PreparedStatement pst = null;
 		Produto objProduto = (Produto)entidade;
+		System.out.println("criou objetos");
 		try {
 			connection.setAutoCommit(false);
 			
 			StringBuilder sql = new StringBuilder();
-			//resgatando o id da marca antes de inserir o novo produto
-			sql.append("SELECT id_marca FROM marcas WHERE nome_marca = " + objProduto.getMarca_produto());
+			/*//resgatando o id da marca antes de inserir o novo produto
+			sql.append("SELECT id_marca FROM marcas WHERE marcas.nome_marca = `"+marca+"`");
+			System.out.println(sql);
 			pst = connection.prepareStatement(sql.toString());
 			ResultSet rs = pst.executeQuery();
 			
+			objProduto.setId_marca_produto(rs.getInt("id_marca"));
 			try {
+				System.out.println(objProduto.getId_marca_produto());
 				pst.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			System.out.println();
+			System.out.println("Selecionou marca");
 			
-			pst = null;
+			pst = null;*/
 			
-			objProduto.setId_marca_produto(rs.getInt("id_marca"));
+			
 			
 			sql = new StringBuilder();
 			
@@ -48,16 +54,16 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 					+ "valor_produto, "
 					+ "descricao_produto, "
 					+ "id_marca_produto, "
-					+ "status_produto, "
-					+ "id_categoria_produto) VALUES (?, ?, ?, ?, ?, ?)");
+					+ "id_categoria_produto, "
+					+ "status_produto) VALUES (?, ?, ?, ?, ?, ?)");
 			pst = connection.prepareStatement(sql.toString());
 			
 			pst.setString(1, objProduto.getNome());
-			pst.setBoolean(2, objProduto.getStatus_produto());
-			pst.setDouble(3, objProduto.getValor_produto());
-			pst.setString(4, objProduto.getDescricao_produto());
-			pst.setInt(5, objProduto.getId_marca_produto());
-			pst.setInt(6, objProduto.getCategoria().getId());
+			pst.setDouble(2, objProduto.getValor_produto());
+			pst.setString(3, objProduto.getDescricao_produto());
+			pst.setInt(4, objProduto.getId_marca_produto());
+			pst.setInt(5, objProduto.getCategoria().getId());
+			pst.setBoolean(6, true);
 			
 			pst.executeUpdate();
 			connection.commit();
@@ -133,6 +139,7 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 	
 	@Override
 	public void excluir(EntidadeDominio entidade) {
+		System.out.println("entrou na dao excluir");
 		openConnection();
 		PreparedStatement pst = null;
 		Produto objProduto = (Produto)entidade;
@@ -146,7 +153,7 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 			pst = connection.prepareStatement(sql.toString());
 			pst.setBoolean(1, false);
 			pst.setInt(2, objProduto.getId());
-			
+			System.out.println(objProduto.getId());
 			pst.executeUpdate();
 			connection.commit();
 			
