@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.HashMap;
+import LES1_2019.core.IFachada;
+import LES1_2019.core.impl.controle.Fachada;
 
 import LES1_2019.controle.web.command.ICommand;
 import LES1_2019.controle.web.command.impl.AlterarCommand;
@@ -53,14 +55,14 @@ public class Servlet extends HttpServlet {
 		    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 		    		IOException {
 			  	doProcessRequest(request, response);
-			  	 System.out.println("pinto get");
+			  	 System.out.println("do get");
 		    }
 		  	
 			/**
 			 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 			 */
 			protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-				System.out.println("pinto post");
+				System.out.println("do post");
 				doProcessRequest(request, response);
 			}
 			
@@ -68,7 +70,6 @@ public class Servlet extends HttpServlet {
 			protected void doProcessRequest(HttpServletRequest request, 
 					HttpServletResponse response) throws ServletException, IOException {
 				//Obtem a url que invocou esta servlet (O que foi definido no methdo do form html)
-				System.out.println("buceta");
 				String uri = request.getRequestURI();
 				System.out.println(uri);
 				

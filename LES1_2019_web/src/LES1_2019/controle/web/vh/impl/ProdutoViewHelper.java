@@ -17,8 +17,8 @@ import LES1_2019.dominio.EntidadeDominio;
 public class ProdutoViewHelper implements IViewHelper {
 
 	public EntidadeDominio getEntidade(HttpServletRequest request) {
-		System.out.println("entrou na viewhelper");
 		String operacao = request.getParameter("operacao");
+		System.out.println("entrou na viewhelper" + operacao);
 		Produto produto = new Produto();
 		Categoria categoria = new Categoria();
 		
@@ -27,8 +27,12 @@ public class ProdutoViewHelper implements IViewHelper {
 		produto.setNome(request.getParameter("nome-produto"));
 		categoria.setId(Integer.parseInt(request.getParameter("categoria-produto")));
 		produto.setCategoria(categoria);
-		produto.setMarca_produto(request.getParameter("marca-produto"));
+		produto.setId_marca_produto(Integer.parseInt(request.getParameter("marca-produto")));
 		produto.setValor_produto(Double.parseDouble(request.getParameter("valor-produto")));
+		System.out.println("PRINT DOS VALORES");
+		System.out.println(request.getParameter("nome-produto"));
+		System.out.println(request.getParameter("valor-produto"));
+		System.out.println(request.getParameter("categoria-produto"));
 		try {
 		produto.setDescricao_produto(request.getParameter("descricao-produto"));
 		} catch (Exception e){
@@ -51,7 +55,9 @@ public class ProdutoViewHelper implements IViewHelper {
 			}
 		}
 	else if(operacao.equals("EXCLUIR-PRODUTO")) {
+		System.out.println("ENTRou no excluir");
 		produto.setId(Integer.parseInt(request.getParameter("id-produto")));
+		System.out.println(Integer.parseInt(request.getParameter("id-produto")));
 		}
 	else if(operacao.equals("VISUALIZAR-PRODUTO")) {
 		try {

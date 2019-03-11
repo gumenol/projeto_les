@@ -6,6 +6,6 @@ import LES1_2019.dominio.EntidadeDominio;
 public class ExcluirCommand extends AbstractCommand {
 
 	public Resultado execute(EntidadeDominio entidade) {
-		return fachada.consultar(entidade);
+		return fachada.excluir(entidade);
 	}
 }
