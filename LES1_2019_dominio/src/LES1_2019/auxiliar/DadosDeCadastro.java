@@ -10,8 +10,8 @@ import LES1_2019.dominio.Marca;
 public class DadosDeCadastro extends EntidadeDominio {
 
 	private ArrayList<Marca> marcas = new ArrayList<>();
-	
 	private ArrayList<Categoria> categorias = new ArrayList<>();
+	
 	
 	//Get e set de marcas
 	public ArrayList<Marca> getMarcas() {
