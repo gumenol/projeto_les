@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
+  <display-name>LES1_2019_web</display-name>
+  <welcome-file-list>
+		<welcome-file>Index.html</welcome-file>
+		<welcome-file>Index.htm</welcome-file>
+		<welcome-file>Index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+
+	<servlet>
+		<description></description>
+		<display-name>Servlet</display-name>
+		<servlet-name>Servlet</servlet-name>
+		<servlet-class>LES1_2019.controle.web.Servlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Servlet</servlet-name>
+		<url-pattern>/SalvarProduto</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Servlet</servlet-name>
+		<url-pattern>/ExcluirProduto</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Servlet</servlet-name>
+		<url-pattern>/AtivarProduto</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Servlet</servlet-name>
+		<url-pattern>/AlterarProduto</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Servlet</servlet-name>
+		<url-pattern>/MostrarProduto</url-pattern>
+	</servlet-mapping>
+	
+		<servlet-mapping>
+		<servlet-name>Servlet</servlet-name>
+		<url-pattern>/SalvarCategoria</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Servlet</servlet-name>
+		<url-pattern>/ExcluirCategoria</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Servlet</servlet-name>
+		<url-pattern>/DadosProduto</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Servlet</servlet-name>
+		<url-pattern>/AlterarCategoria</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Servlet</servlet-name>
+		<url-pattern>/MostrarCategoria</url-pattern>
+	</servlet-mapping>
+	
+</web-app>
