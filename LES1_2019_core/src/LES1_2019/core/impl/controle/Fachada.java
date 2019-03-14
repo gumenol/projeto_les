@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import LES1_2019.auxiliar.DadosDeCadastro;
 import LES1_2019.core.IDAO;
 //import geral
 import LES1_2019.core.IFachada;
@@ -14,6 +15,7 @@ import LES1_2019.core.IStrategy;
 import LES1_2019.core.aplicacao.Resultado;
 //import daos
 import LES1_2019.core.impl.dao.CategoriaDAO;
+import LES1_2019.core.impl.dao.DadosParaCadastroDAO;
 import LES1_2019.core.impl.dao.ProdutoDAO;
 import LES1_2019.core.impl.negocio.ProdutoMesmoNome;
 import LES1_2019.core.impl.negocio.ValidarDadosCategoria;
@@ -35,9 +37,11 @@ public class Fachada implements IFachada {
 		
 		CategoriaDAO objCategoriaDAO = new CategoriaDAO();
 		ProdutoDAO objProdutoDAO = new ProdutoDAO();
+		DadosParaCadastroDAO objDadosProduto = new DadosParaCadastroDAO();
 		
 		daos.put(Categoria.class.getName(), objCategoriaDAO);
 		daos.put(Produto.class.getName(), objProdutoDAO);
+		daos.put(DadosDeCadastro.class.getName(), objDadosProduto);
 		
 		//criando objetos das classes de regras de negocio
 		ValidarDadosProduto objValidarDadosProduto = new ValidarDadosProduto();
@@ -172,19 +176,24 @@ public class Fachada implements IFachada {
 	public Resultado consultar(EntidadeDominio entidade) {
 		objResultado = new Resultado();
 		String nmClasse = entidade.getClass().getName();
-		String msg = executarRegras(entidade, "CONSULTAR");
-		
+		String msg = executarRegras(entidade, "CONSULTAR-PRODUTOS");
+		System.out.println("entrou na dao de consulta");
 		if(msg == null) {
 			IDAO objDao = daos.get(nmClasse);
+			System.out.println("criou obj de dao");
 			try {
 				objResultado.setEntidades(objDao.consultar(entidade));
+				System.out.println("setou entidade");
 			} catch (SQLException e) {
 				e.printStackTrace();
 				objResultado.setMensagem("Nao foi possivel fazer a consulta!");
+				System.out.println("erro dao consulta");
 			}
 		} else {
 			objResultado.setMensagem(msg);
+			System.out.println("setou mensagem nula");
 		}
+		System.out.println("retornou");
 		return objResultado;
 	}
 
@@ -192,8 +201,33 @@ public class Fachada implements IFachada {
 	public Resultado visualizar(EntidadeDominio entidade) {
 		// TODO Auto-generated method stub
 		objResultado = new Resultado();
-		objResultado.setEntidades(new ArrayList<EntidadeDominio>(1));
+		objResultado.setEntidades(new ArrayList<EntidadeDominio>(0));
 		objResultado.getEntidades().add(entidade);
+		return objResultado;
+	}
+	
+	@Override
+	public Resultado ativar(EntidadeDominio entidade) {
+		System.out.println("entrou fachada ativar");
+		objResultado = new Resultado();
+		String nmClasse = entidade.getClass().getName();
+		
+		String msg = executarRegras(entidade, "ATIVAR-PRODUTO");
+		
+		if(msg == null) {
+			IDAO objDao = daos.get(nmClasse);
+			try {
+				objDao.ativar(entidade);
+				List<EntidadeDominio> entidades = new ArrayList<EntidadeDominio>();
+				entidades.add(entidade);
+				objResultado.setEntidades(entidades);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				objResultado.setMensagem("Nao foi possivel salvar!");
+			}
+		} else {
+			objResultado.setMensagem(msg);
+		}
 		return objResultado;
 	}
 	

@@ -173,9 +173,11 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 			}
 		}
 	}
+
 	
 	@Override
 	public void ativar(EntidadeDominio entidade) {
+		System.out.println("entrou na dao ativar");
 		openConnection();
 		PreparedStatement pst = null;
 		Produto objProduto = (Produto)entidade;
@@ -189,7 +191,7 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 			pst = connection.prepareStatement(sql.toString());
 			pst.setBoolean(1, true);
 			pst.setInt(2, objProduto.getId());
-			
+			System.out.println("id produto na dao"+ objProduto.getId());
 			pst.executeUpdate();
 			connection.commit();
 			
@@ -241,6 +243,7 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 				prod.setValor_produto(rs.getDouble("valor_produto"));
 				prod.setDescricao_produto(rs.getString("descricao_produto"));
 				prod.setStatus_produto(rs.getBoolean("status_produto"));
+				produtos.add(prod);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
