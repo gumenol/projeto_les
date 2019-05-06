@@ -12,19 +12,26 @@ import LES1_2019.core.IFachada;
 import LES1_2019.core.impl.controle.Fachada;
 
 import LES1_2019.controle.web.command.ICommand;
+import LES1_2019.controle.web.command.impl.AddSessionCommand;
 import LES1_2019.controle.web.command.impl.AlterarCommand;
+import LES1_2019.controle.web.command.impl.AtivarCommand;
 import LES1_2019.controle.web.command.impl.ConsultarCommand;
 import LES1_2019.controle.web.command.impl.ExcluirCommand;
+import LES1_2019.controle.web.command.impl.LogarCommand;
 import LES1_2019.controle.web.command.impl.SalvarCommand;
 import LES1_2019.controle.web.command.impl.VisualizarCommand;
 import LES1_2019.controle.web.vh.IViewHelper;
 import LES1_2019.controle.web.vh.impl.ProdutoViewHelper;
-import LES1_2019.controle.web.vh.impl.CategoriaViewHelper;
-
+import LES1_2019.controle.web.vh.impl.UserViewHelper;
+import LES1_2019.controle.web.vh.impl.CartaoViewHelper;
+import LES1_2019.controle.web.vh.impl.DadosDoProdutoViewHelper;
+import LES1_2019.controle.web.vh.impl.EnderecoViewHelper;
+import LES1_2019.controle.web.vh.impl.PedidoViewHelper;
 import LES1_2019.core.aplicacao.Resultado;
 import LES1_2019.dominio.EntidadeDominio;
 import LES1_2019.dominio.Produto;
 import LES1_2019.dominio.Categoria;
+import LES1_2019.dominio.User;
 
 public class Servlet extends HttpServlet {
 
@@ -32,24 +39,39 @@ public class Servlet extends HttpServlet {
 	private static Map<String, ICommand> commands;
 	private static Map<String, IViewHelper> viewhelpers;
 	
-	
 	public Servlet() {
 		super();
 		commands = new HashMap<String, ICommand>();
 		viewhelpers = new HashMap<String, IViewHelper>();
 		
-		commands.put("SALVAR-PRODUTO", new SalvarCommand());
-		commands.put("ALTERAR-PRODUTO", new AlterarCommand());
-		commands.put("EXCLUIR-PRODUTO", new ExcluirCommand());
-		commands.put("CONSULTAR-PRODUTOS", new ConsultarCommand());
-		commands.put("VISUALIZAR-PRODUTO", new VisualizarCommand());
-		//falta tudo de categoria
+		commands.put("SALVAR", new SalvarCommand());
+		commands.put("ALTERAR", new AlterarCommand());
+		commands.put("ALTERAR-SENHA", new AlterarCommand());
+		commands.put("EXCLUIR", new ExcluirCommand());
+		commands.put("CONSULTAR", new ConsultarCommand());
+		commands.put("INDEX", new ConsultarCommand());
+		commands.put("VISUALIZAR", new VisualizarCommand());
+		commands.put("ATIVAR", new AtivarCommand());
+		commands.put("LOGAR", new LogarCommand());
+		commands.put("CARDSESSION", new AddSessionCommand());
+		commands.put("ENDSESSION", new AddSessionCommand());
+		commands.put("USERSESSION", new AddSessionCommand());
+		commands.put("ADDCARRINHO", new AlterarCommand());
+		commands.put("VER-CARRINHO", new VisualizarCommand());
+		commands.put("REMOVECARRINHO", new AlterarCommand());
+		commands.put("FINALIZAR-COMPRA", new VisualizarCommand());
+		commands.put("FAZER-PEDIDO", new SalvarCommand());
+		commands.put("CONSULTAR-ADMIN", new ConsultarCommand());
+		commands.put("CONFIRMAR-PEDIDO", new AlterarCommand());
+		commands.put("NEGAR-PEDIDO", new AlterarCommand());
 		
-		viewhelpers.put("/LES1_2019_web/SalvarProduto", new ProdutoViewHelper());
-		viewhelpers.put("/LES1_2019_web/ExcluirProduto", new ProdutoViewHelper());
-		viewhelpers.put("/LES1_2019_web/AlterarProduto", new ProdutoViewHelper());
-		viewhelpers.put("/LES1_2019_web/MostrarProduto", new ProdutoViewHelper());
 		
+		viewhelpers.put("/LES1_2019_web/Produtos", new ProdutoViewHelper());
+		viewhelpers.put("/LES1_2019_web/DadosProduto", new DadosDoProdutoViewHelper());
+		viewhelpers.put("/LES1_2019_web/User", new UserViewHelper());
+		viewhelpers.put("/LES1_2019_web/Enderecos", new EnderecoViewHelper());
+		viewhelpers.put("/LES1_2019_web/Cartoes", new CartaoViewHelper());
+		viewhelpers.put("/LES1_2019_web/Pedidos", new PedidoViewHelper());
 	}
 		  @Override
 		    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -77,13 +99,14 @@ public class Servlet extends HttpServlet {
 				String operacao = request.getParameter("operacao");
 				System.out.println(operacao);
 				
+							
 				//Obtem uma viewhelper indexado pela uri que invocou esta servlet
 				IViewHelper vh = viewhelpers.get(uri);
-				System.out.println(vh.getClass().getName());
+				//System.out.println(vh.getClass().getName());
 				
 				//O viewhelper retorna a entidade especifica para a tela que chamou esta servlet
 				EntidadeDominio entidade =  vh.getEntidade(request);
-				System.out.println(entidade);
+				//System.out.println(entidade);
 				
 				//Obtem o command para executar a respectiva operacao
 				ICommand command = commands.get(operacao);
