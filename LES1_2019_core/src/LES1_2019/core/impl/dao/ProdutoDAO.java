@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mysql.jdbc.Statement;
+
 import LES1_2019.dominio.Categoria;
 import LES1_2019.dominio.EntidadeDominio;
 import LES1_2019.dominio.Produto;
@@ -55,8 +57,9 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 					+ "descricao_produto, "
 					+ "id_marca_produto, "
 					+ "id_categoria_produto, "
-					+ "status_produto) VALUES (?, ?, ?, ?, ?, ?)");
-			pst = connection.prepareStatement(sql.toString());
+					+ "status_produto, "
+					+ "imagem_produto) VALUES (?, ?, ?, ?, ?, ?, ?)");
+			pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 			
 			pst.setString(1, objProduto.getNome());
 			pst.setDouble(2, objProduto.getValor_produto());
@@ -64,8 +67,33 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 			pst.setInt(4, objProduto.getId_marca_produto());
 			pst.setInt(5, objProduto.getCategoria().getId());
 			pst.setBoolean(6, true);
+			pst.setString(7, objProduto.getImg_produto());
 			
 			pst.executeUpdate();
+			
+			ResultSet rs = pst.getGeneratedKeys();
+			
+			int id = 0;
+			if(rs.next()) {
+				id=rs.getInt(1);
+				objProduto.setId(id);
+			}
+			
+			connection.commit();
+			
+			connection.setAutoCommit(false);
+			
+			sql = new StringBuilder();
+			sql.append("INSERT INTO estoque "
+					+ "(id_produto_estoque, qtd_estoque) "
+					+ "VALUES (?, 0)");
+			
+			pst = connection.prepareStatement(sql.toString());
+			
+			pst.setInt(1, objProduto.getId());
+			
+			pst.executeUpdate();
+			
 			connection.commit();
 			
 			} catch (SQLException e) {
@@ -87,10 +115,16 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 	
 	@Override
 	public void alterar(EntidadeDominio entidade) {
+		System.out.println("ENTROU NA DAO");
 		openConnection();
 		PreparedStatement pst = null;
 		Produto objProduto = (Produto)entidade;
 		StringBuilder sql = new StringBuilder();
+		
+		System.out.println(objProduto.getNome()+" "+ 
+		objProduto.getValor_produto()+" "+
+		objProduto.getDescricao_produto()+" "+
+		objProduto.getId_marca_produto()+" "+objProduto.getCategoria().getId());
 		
 		if(objProduto.getNome()!= null &&
 				objProduto.getValor_produto()>0 &&
@@ -102,8 +136,7 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 				connection.setAutoCommit(false);
 				sql.append("UPDATE produtos SET nome_produto=?, ");
 				sql.append("valor_produto=?, descricao_produto=?, ");
-				sql.append("id_marca_produto=?, id_categoria_produto=?, ");
-				sql.append("status_produto=?");
+				sql.append("id_marca_produto=?, id_categoria_produto=?, imagem_produto=? ");
 				sql.append("WHERE id_produto=?");
 				
 				pst = connection.prepareStatement(sql.toString());
@@ -113,11 +146,26 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 				pst.setString(3, objProduto.getDescricao_produto());
 				pst.setInt(4, objProduto.getId_marca_produto());
 				pst.setInt(5, objProduto.getCategoria().getId());
-				pst.setBoolean(6, objProduto.getStatus_produto());
+				pst.setString(6, objProduto.getImg_produto());
 				pst.setInt(7, objProduto.getId());
 				
 				pst.executeUpdate();
 				connection.commit();
+				
+				connection.setAutoCommit(false);
+				
+				sql = new StringBuilder();
+				sql.append("UPDATE estoque "
+						+ "SET qtd_estoque=? WHERE id_produto_estoque = "+objProduto.getId());
+				
+				pst = connection.prepareStatement(sql.toString());
+				
+				pst.setInt(1, objProduto.getQtd_estoque());
+				
+				pst.executeUpdate();
+				
+				connection.commit();
+				
 				
 			} catch (SQLException e) {
 				try {
@@ -134,7 +182,46 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 					e.printStackTrace();
 				}
 			}
-		}
+		} /*else if(objProduto.getId()!=null) {
+			sql = new StringBuilder();
+			try {
+			connection.setAutoCommit(false);
+			
+			sql.append("SELECT qtd_estoque from estoque "
+					+ "WHERE id_produto_estoque = "+objProduto.getId());
+			pst = connection.prepareStatement(sql.toString());
+			ResultSet rs = pst.executeQuery();
+			int qtd = 0;
+			if(rs.next()) {
+				qtd=rs.getInt("qtd_estoque");
+				qtd--;
+			}
+			
+			connection.commit();
+			connection.setAutoCommit(false);
+			
+			sql.append("UPDATE estoque "
+					+ "SET qtd_estoque="+qtd
+					+ "WHERE id_produto_estoque = "+objProduto.getId());
+			pst = connection.prepareStatement(sql.toString());
+			connection.commit();
+			
+				} catch (SQLException e) {
+					try {
+						connection.rollback();
+					} catch (SQLException el) {
+						el.printStackTrace();
+					}
+					e.printStackTrace();
+				} finally {
+					try {
+						pst.close();
+						connection.close();
+					} catch (SQLException e){
+						e.printStackTrace();
+					}
+			}
+		}*/
 	}
 	
 	@Override
@@ -217,17 +304,19 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 		PreparedStatement pst = null;
 		StringBuilder sql = new StringBuilder();
 		List<EntidadeDominio> produtos = new ArrayList<EntidadeDominio>();
-		
-		sql.append("SELECT produto.id_produto, produto.nome_produto, ");
+		sql.append("SELECT produto.id_produto, produto.nome_produto, produto.imagem_produto, ");
 		sql.append("marca.nome_marca, ");
 		sql.append("categoria.nome_categoria, ");
 		sql.append("produto.valor_produto, produto.descricao_produto, ");
-		sql.append("produto.status_produto ");
+		sql.append("produto.status_produto, est.qtd_estoque ");
 		sql.append("FROM produtos AS produto ");
 		sql.append("INNER JOIN categorias AS categoria ");
 		sql.append("ON produto.id_categoria_produto = categoria.id_categoria ");
 		sql.append("INNER JOIN marcas as marca ");
-		sql.append("ON produto.id_marca_produto = marca.id_marca");
+		sql.append("ON produto.id_marca_produto = marca.id_marca ");
+		sql.append("INNER JOIN estoque as est ");
+		sql.append("ON produto.id_produto = est.id_produto_estoque ");
+		sql.append("ORDER BY produto.id_produto asc");
 		
 		try {
 			openConnection();
@@ -243,6 +332,8 @@ public class ProdutoDAO extends AbstractJdbcDAO {
 				prod.setValor_produto(rs.getDouble("valor_produto"));
 				prod.setDescricao_produto(rs.getString("descricao_produto"));
 				prod.setStatus_produto(rs.getBoolean("status_produto"));
+				prod.setImg_produto(rs.getString("imagem_produto"));
+				prod.setQtd_estoque(rs.getInt("qtd_estoque"));
 				produtos.add(prod);
 			}
 		} catch (SQLException e) {

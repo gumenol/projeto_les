@@ -7,9 +7,8 @@ import LES1_2019.core.impl.dao.ProdutoDAO;
 import LES1_2019.dominio.EntidadeDominio;
 import LES1_2019.dominio.Produto;
 
-//provavelmente desnecessario
 
-public class ProdutoMesmoNome implements IStrategy {
+public class AlterarProdutoMesmoNome implements IStrategy {
 
 	@Override
 	public String processar(EntidadeDominio entidade) {
@@ -17,16 +16,23 @@ public class ProdutoMesmoNome implements IStrategy {
 		if(entidade instanceof Produto) {
 			System.out.println("entrou na regra de negocio");
 			Produto objProduto = (Produto)entidade;
-			System.out.println(objProduto.getNome());
-			
 			ProdutoDAO objProdDao = new ProdutoDAO();
 			Produto prod = new Produto();
+			
 			List<EntidadeDominio> dadosProduto = objProdDao.consultar(entidade);
 				if(dadosProduto!=null) {
 					for(EntidadeDominio p:dadosProduto) {
 						prod = (Produto)p;
 						if(prod.getNome().equals(objProduto.getNome())) {
-							return "Ja existe um produto cadastrado com esse nome";
+							System.out.println("entrou no if de nomes");
+							System.out.println("produto do form: "+objProduto.getNome() + objProduto.getId());
+							System.out.println("produto do banco: "+prod.getNome() + prod.getId());
+							if(prod.getId() == objProduto.getId()) {
+								break;
+							}
+							else {
+								return "O nome do produto alterado ja existe!"+objProduto.getId();
+							}
 						}
 					}
 				}

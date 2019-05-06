@@ -10,4 +10,6 @@ public interface IFachada {
 	public Resultado consultar(EntidadeDominio entidade);
 	public Resultado visualizar(EntidadeDominio entidade);
 	public Resultado ativar(EntidadeDominio entidade);
+	public Resultado logar(EntidadeDominio entidade);
+	public Resultado session(EntidadeDominio entidade);
 }

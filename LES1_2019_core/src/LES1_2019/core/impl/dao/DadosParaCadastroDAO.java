@@ -43,9 +43,7 @@ public class DadosParaCadastroDAO extends AbstractJdbcDAO {
 				cat.setNome(rs.getString("nome_categoria"));
 				cat.setId(rs.getInt("id_categoria"));
 				boolean statusCat= rs.getBoolean("status_categoria");
-				System.out.println(cat.getNome());
 				if(statusCat) {
-					System.out.println("Categoria adicionada");
 				dados.getCategoria().add(cat);
 				}
 			}
@@ -60,9 +58,7 @@ public class DadosParaCadastroDAO extends AbstractJdbcDAO {
 				m.setNome_marca(rs.getString("nome_marca"));
 				m.setId(rs.getInt("id_marca"));
 				boolean statusMarca = rs.getBoolean("status_marca");
-				System.out.println(m.getNome_marca());
 				if(statusMarca) {
-					System.out.println("marca adicionada");
 				dados.getMarcas().add(m);
 				}
 		}
