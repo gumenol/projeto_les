@@ -8,8 +8,30 @@ public class Produto extends EntidadeDominio {
 	private String marca_produto;
 	private int id_marca_produto;
 	private boolean status_produto;
+	private String img_produto;
+	private int qtd_estoque;
+	private int qtd_pedido;
+	private int qtd_pedido_anterior;
+	private boolean remover;
+	private double subtotal;
+	private int qtdtotal;
+	private int qtdremover;
+	private int pedido;
 	private Categoria objCategoria = new Categoria();
+		
+	public int getPedido() {
+		return pedido;
+	}
+	public void setPedido(int pedido) {
+		this.pedido = pedido;
+	}
 	
+	public int getQtdremover() {
+		return qtdremover;
+	}
+	public void setQtdremover(int qtdremover) {
+		this.qtdremover = qtdremover;
+	}
 	
 	//getters e setters nome produto
 	public String getNome() {
@@ -62,6 +84,53 @@ public class Produto extends EntidadeDominio {
 		this.objCategoria = objCategoria;
 	}
 	
+	public String getImg_produto() {
+		return img_produto;
+	}
+	public void setImg_produto(String img_produto) {
+		this.img_produto = img_produto;
+	}
 	
+	public int getQtd_estoque() {
+		return qtd_estoque;
+	}
+	public void setQtd_estoque(int qtd_estoque) {
+		this.qtd_estoque = qtd_estoque;
+	}
+	
+	public int getQtd_pedido() {
+		return qtd_pedido;
+	}
+	public void setQtd_pedido(int qtd_pedido) {
+		this.qtd_pedido = qtd_pedido;
+	}
+	
+	public boolean isRemover() {
+		return remover;
+	}
+	public void setRemover(boolean remover) {
+		this.remover = remover;
+	}
+	
+	public int getQtd_pedido_anterior() {
+		return qtd_pedido_anterior;
+	}
+	public void setQtd_pedido_anterior(int qtd_pedido_anterior) {
+		this.qtd_pedido_anterior = qtd_pedido_anterior;
+	}
+	
+	public double getSubtotal() {
+		return subtotal;
+	}
+	public void setSubtotal(double subtotal) {
+		this.subtotal = subtotal;
+	}
+	
+	public int getQtdtotal() {
+		return qtdtotal;
+	}
+	public void setQtdtotal(int qtdtotal) {
+		this.qtdtotal = qtdtotal;
+	}
 	
 }
